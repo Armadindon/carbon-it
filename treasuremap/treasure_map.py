@@ -3,6 +3,9 @@ Fichier principal du module, contient la classe TreasureMap qui contient
 quasiment toute la logique de l'exercice
 """
 
+from treasuremap.adventurer import Adventurer
+
+
 class TreasureMap():
     """
     Classe principale du projet, elle y contient la structure de données
@@ -10,16 +13,16 @@ class TreasureMap():
     mais on peut également récupérer des données sous format matricielle.
     """
 
-    width, height = 0, 0
-    mountains = []
-    treasures = []
-
     def __init__(self, description: str) -> None:
         """Initialisation de l'objet TreasureMap et construction de la structure
 
         Args:
             description (str): Le contenu du fichier représentant la carte
         """
+        self.width, self.height = 0, 0
+        self.mountains = []
+        self.treasures = []
+        self.adventurers = []
 
         # On commence par nettoyer l'input
         instructions = list(filter(lambda x: bool(
@@ -31,18 +34,21 @@ class TreasureMap():
 
         # On itère les lignes suivante pour remplir la structure de données de la carte
         for instruction in instructions[1:]:
-            action, * \
-                parameters = tuple(
-                    map(lambda x: x.strip(), instruction.split("-")))
-            # On convertit les paramètres en entier
-            parameters = tuple(map(int, parameters))
+            action, *parameters = tuple(
+                map(lambda x: x.strip(), instruction.split("-")))
+
+            if action != "A":
+                # On convertit les paramètres en entier (sauf dans le cas d'un aventurier)
+                parameters = tuple(map(int, parameters))
 
             # On ajoute dans la bonne liste
             if action == "M":
                 self.mountains.append((parameters[0], parameters[1]))
             elif action == "T":
                 self.treasures.append(
-                    (parameters[0], parameters[1], parameters[2]))
+                    [parameters[0], parameters[1], parameters[2]])
+            elif action == "A":
+                self.adventurers.append(Adventurer(instruction))
 
     def get_matrix(self) -> list[list[str]]:
         """Méthode utilitaire afin de renvoyer les données sous forme matricielle
@@ -72,6 +78,9 @@ class TreasureMap():
                                 " - ".join(map(str, x)), self.mountains)) + "\n"
         definition += "\n".join(map(lambda x: "T - " +
                                 " - ".join(map(str, x)), self.treasures))
+        if len(self.adventurers) != 0:
+            definition += "\n" + \
+                "\n".join(map(lambda x: x.get_description(), self.adventurers))
 
         return definition
 
