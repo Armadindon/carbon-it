@@ -19,19 +19,19 @@ if __name__ == "__main__":
             if len(sys.argv) <= opt_index + 1:
                 print(
                     "Utilisation: python treasuremap/main.py [-f file] [-d delay]")
-                exit(1)
+                sys.exit(1)
             try:
                 DELAY = float(sys.argv[opt_index + 1])
             except ValueError:
                 print(
                     "Utilisation: python treasuremap/main.py [-f file] [-d delay]")
-                exit(1)
+                sys.exit(1)
         if "-f" in sys.argv:
             opt_index = sys.argv.index("-f")
             if len(sys.argv) <= opt_index + 1:
                 print(
                     "Utilisation: python treasuremap/main.py [-f file] [-d delay]")
-                exit(1)
+                sys.exit(1)
             OUTPUT_FILE_NAME = sys.argv[opt_index + 1]
 
     INPUT_DESCRIPTION = """C - 3 - 4
