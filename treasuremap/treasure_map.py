@@ -65,6 +65,11 @@ class TreasureMap():
         for t_x, t_y, t_n in self.treasures:
             matrix[t_y][t_x] = f"T({t_n})"
 
+        for adv in self.adventurers:
+            # On affiche l'aventurier seulement si il n'y a rien d'autre qui occupe la case
+            if matrix[adv.position_y][adv.position_x] == ".":
+                matrix[adv.position_y][adv.position_x] = f"A({adv.get_short_heading()})"
+
         return matrix
 
     def get_definition(self) -> str:
@@ -92,3 +97,27 @@ class TreasureMap():
         """
         matrix = self.get_matrix()
         return '\n'.join(['\t'.join(line) for line in matrix])
+
+    def do_turn(self, verbose=False) -> bool:
+        """Réalise un tour de "jeu" en mettant à jour les positions des aventuriers
+
+        Args:
+            verbose (bool, optional): Si on affiche la matrice a chaque tour. Désactivé par défaut.
+
+        Returns:
+            bool: _description_
+        """
+        remaining_adventurers = list(
+            filter(lambda x: not x.finished(), self.adventurers))
+        for adv in remaining_adventurers:
+            # On recalcule la position des aventuriers
+            # a chaque itération pour gérer les obstacles
+            obstacles = self.mountains + \
+                list(map(lambda x: (x.position_x, x.position_y), self.adventurers))
+            adv.do_move(obstacles, self.treasures,
+                        (self.width, self.height))
+
+        if verbose:
+            print(self, "\n")
+
+        return not all(map(lambda x: x.finished(), self.adventurers))

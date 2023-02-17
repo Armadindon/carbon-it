@@ -103,15 +103,16 @@ class Adventurer():
                 self.position_x = new_x
                 self.position_y = new_y
                 # On vérifie également s'il y a un trésor
-                treasure = list(filter(lambda x: (x[0], x[1]) == (
+                treasures_at_pos = list(filter(lambda x: (x[1][0], x[1][1]) == (
                     self.position_x, self.position_y), enumerate(treasures)))
-                if len(treasure) != 0:
+                if len(treasures_at_pos) != 0:
+                    treasure_index, treasure_infos = treasures_at_pos[0]
                     # On met à jour le compte de trésors
-                    treasures[treasure[0][0]][2] -= 1
+                    treasure_infos[2] -= 1
                     self.treasure_nb += 1
                     # Si il tombe à 0, on supprime l'entrée
-                    if treasures[treasure[0][0]][2] == 0:
-                        treasures.pop(treasures[treasure[0][0]])
+                    if treasure_infos[2] == 0:
+                        treasures.pop(treasure_index)
 
         elif move == "D":
             self.heading = self.heading.turn_right()
@@ -119,7 +120,7 @@ class Adventurer():
             self.heading = self.heading.turn_left()
 
         self.current_movement += 1
-        return self.current_movement != len(self.movements)
+        return not self.finished()
 
     def __str__(self) -> str:
         """Retourne un affichage simple pour les aventuriers
@@ -144,6 +145,22 @@ Elle regarde vers {self.heading} et en est à son {self.current_movement + 1}e m
                            inverse_headings_correspondances[self.heading],
                            str(self.treasure_nb)
                            ])
+
+    def finished(self) -> bool:
+        """Retourne si l'aventurier a encore des mouvements à réaliser
+
+        Returns:
+            bool: S'il ne reste pas de mouvements à l'aventurier
+        """
+        return self.current_movement == len(self.movements)
+
+    def get_short_heading(self) -> str:
+        """Retourne la simplification de la direction regardée (N,S,W,E)
+
+        Returns:
+            str: La simplification de la direction
+        """
+        return inverse_headings_correspondances[self.heading]
 
 
 if __name__ == "__main__":
