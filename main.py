@@ -43,6 +43,8 @@ A - Lara - 1 - 1 - S - AADADAGGA
 """
     tmap = TreasureMap(INPUT_DESCRIPTION)
     i = 1
+    print("Initial state : ")
+    print(tmap)
     print("1er tour:")
     while tmap.do_turn(verbose=True):
         time.sleep(DELAY)

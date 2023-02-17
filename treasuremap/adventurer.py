@@ -162,8 +162,3 @@ Elle regarde vers {self.heading} et en est à son {self.current_movement + 1}e m
         """
         return inverse_headings_correspondances[self.heading]
 
-
-if __name__ == "__main__":
-    Lara = Adventurer("A - Lara - 1 - 1 - S - AADADAGGA")
-    print(Lara)
-    print(Lara.get_description())

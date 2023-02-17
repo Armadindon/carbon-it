@@ -116,8 +116,8 @@ class TreasureMap():
                 list(map(lambda x: (x.position_x, x.position_y), self.adventurers))
             adv.do_move(obstacles, self.treasures,
                         (self.width, self.height))
-
         if verbose:
             print(self, "\n")
+
 
         return not all(map(lambda x: x.finished(), self.adventurers))
